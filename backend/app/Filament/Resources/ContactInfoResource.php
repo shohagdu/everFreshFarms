@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\ContactInfoResource\Pages;
+use App\Models\ContactInfo;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class ContactInfoResource extends Resource
+{
+    protected static ?string $model = ContactInfo::class;
+    protected static ?string $navigationIcon = 'heroicon-o-phone';
+    protected static ?string $navigationLabel = 'Contact Info';
+    protected static ?string $navigationGroup = 'Settings';
+
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Forms\Components\Section::make('Phone & Email')->schema([
+                Forms\Components\TextInput::make('phone_primary'),
+                Forms\Components\TextInput::make('phone_secondary'),
+                Forms\Components\TextInput::make('email')->email(),
+            ])->columns(3),
+
+            Forms\Components\Section::make('Address')->schema([
+                Forms\Components\Textarea::make('address')->rows(2),
+                Forms\Components\Textarea::make('address_bn')->label('Address (Bangla)')->rows(2),
+            ])->columns(2),
+
+            Forms\Components\Section::make('Working Hours')->schema([
+                Forms\Components\TextInput::make('working_hours'),
+                Forms\Components\TextInput::make('working_hours_bn')->label('Working Hours (Bangla)'),
+            ])->columns(2),
+
+            Forms\Components\Textarea::make('map_embed_url')->label('Google Maps Embed URL')->rows(3),
+        ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table->columns([
+            Tables\Columns\TextColumn::make('phone_primary'),
+            Tables\Columns\TextColumn::make('email'),
+            Tables\Columns\TextColumn::make('updated_at')->dateTime(),
+        ])->actions([
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ManageContactInfos::route('/'),
+        ];
+    }
+}

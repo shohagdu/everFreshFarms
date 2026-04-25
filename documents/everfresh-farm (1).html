@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ever Fresh Farm – এভার ফ্রেশ ফার্ম</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-dark:   #1a5c2e;
+      --green-mid:    #2a8a45;
+      --green-light:  #4caf6e;
+      --orange:       #e8620a;
+      --red:          #c0271a;
+      --cream:        #fdf8f0;
+      --white:        #ffffff;
+      --text-dark:    #1a2e1a;
+      --text-muted:   #4a6a4a;
+      --gold:         #d4a017;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Hind Siliguri', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ══ NAVBAR ══════════════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26, 92, 46, 0.97);
+      backdrop-filter: blur(10px);
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.25);
+      transition: all .3s ease;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: #fff;
+      box-shadow: 0 2px 10px rgba(232,98,10,.4);
+    }
+
+    .nav-logo-text {
+      display: flex; flex-direction: column; line-height: 1.1;
+    }
+    .nav-logo-text span:first-child {
+      font-size: 18px; font-weight: 700; color: #fff;
+    }
+    .nav-logo-text span:last-child {
+      font-size: 11px; color: rgba(255,255,255,.6); letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 6px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      font-size: 15px; font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 6px;
+      transition: all .25s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: 4px; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { left: 14px; right: 14px; }
+
+    .nav-cta {
+      background: var(--orange);
+      color: #fff !important;
+      border-radius: 8px !important;
+      padding: 8px 18px !important;
+      font-weight: 600 !important;
+      transition: transform .2s, box-shadow .2s !important;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(232,98,10,.5); }
+    .nav-cta::after { display: none !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: #fff; border-radius: 2px; transition: all .3s;
+    }
+
+    /* ══ HERO ════════════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(76,175,110,.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(232,98,10,.08) 0%, transparent 50%),
+        linear-gradient(160deg, #0f3d1e 0%, #1a5c2e 45%, #2a8a45 100%);
+      display: flex; align-items: center;
+      padding: 70px 5% 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-leaf {
+      position: absolute;
+      opacity: .06;
+      font-size: 320px;
+      right: -60px; top: -40px;
+      transform: rotate(-20deg);
+      pointer-events: none;
+      user-select: none;
+    }
+    .hero-leaf2 {
+      position: absolute;
+      opacity: .04;
+      font-size: 200px;
+      left: -30px; bottom: 60px;
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 650px;
+      z-index: 1;
+      animation: fadeUp .9s ease both;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(232,98,10,.2);
+      border: 1px solid rgba(232,98,10,.4);
+      color: #ffb380;
+      font-size: 13px; font-weight: 600;
+      padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+    }
+
+    .hero-title {
+      font-family: 'Hind Siliguri', sans-serif;
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(90deg, var(--red), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .hero-desc {
+      font-size: 16px; line-height: 1.8;
+      color: rgba(255,255,255,.75);
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    .hero-buttons {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), #c0521a);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 15px; font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(232,98,10,.4);
+      transition: transform .2s, box-shadow .2s;
+      border: none; cursor: pointer;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(232,98,10,.5); }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 15px; font-weight: 600;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,.35);
+      transition: all .2s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.6); }
+
+    .hero-stats {
+      display: flex; gap: 36px;
+      margin-top: 52px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      flex-wrap: wrap;
+    }
+
+    .stat-item { text-align: left; }
+    .stat-num {
+      font-size: 32px; font-weight: 700; color: #fff;
+      line-height: 1;
+    }
+    .stat-num span { color: var(--orange); }
+    .stat-label { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 4px; }
+
+    /* ══ SECTION COMMON ══════════════════════════════════════ */
+    section { padding: 90px 5%; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 700;
+      color: var(--green-dark);
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ══ ABOUT ════════════════════════════════════════════════ */
+    #about {
+      background: #fff;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-image-wrap {
+      position: relative;
+    }
+
+    .about-img-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      border-radius: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px;
+      box-shadow: 0 20px 60px rgba(26,92,46,.2);
+    }
+    .about-img-placeholder .big-icon { font-size: 80px; }
+    .about-img-placeholder p { color: rgba(255,255,255,.6); font-size: 14px; }
+
+    .about-badge-float {
+      position: absolute;
+      bottom: -18px; right: -18px;
+      background: var(--orange);
+      color: #fff;
+      border-radius: 14px;
+      padding: 16px 22px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(232,98,10,.4);
+    }
+    .about-badge-float .num { font-size: 28px; font-weight: 700; line-height: 1; }
+    .about-badge-float .lbl { font-size: 12px; opacity: .85; margin-top: 3px; }
+
+    .about-text h2 {
+      font-size: 30px; font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 16px; line-height: 1.3;
+    }
+    .about-text p {
+      font-size: 16px; color: var(--text-muted);
+      line-height: 1.9; margin-bottom: 16px;
+    }
+
+    .about-features {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-top: 24px;
+    }
+
+    .feature-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .feature-icon {
+      width: 36px; height: 36px;
+      background: rgba(42,138,69,.1);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .feature-row span { font-size: 15px; font-weight: 500; color: var(--text-dark); }
+
+    /* ══ PRODUCTS ════════════════════════════════════════════ */
+    #products {
+      background: var(--cream);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .product-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,.12); }
+
+    .product-img {
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-img.goat { background: linear-gradient(135deg, #1a5c2e, #2a8a45); }
+    .product-img.meat { background: linear-gradient(135deg, #8b1a1a, #c0271a); }
+    .product-img.live { background: linear-gradient(135deg, #5a3800, #d4a017); }
+
+    .product-tag {
+      position: absolute; top: 14px; right: 14px;
+      background: rgba(255,255,255,.2);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      letter-spacing: .5px;
+    }
+
+    .product-body { padding: 22px 24px 26px; }
+    .product-body h3 { font-size: 20px; font-weight: 700; color: var(--green-dark); margin-bottom: 8px; }
+    .product-body p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px; }
+
+    .product-tags {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .ptag {
+      font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(42,138,69,.1);
+      color: var(--green-mid);
+    }
+
+    /* ══ WHY US ══════════════════════════════════════════════ */
+    #why {
+      background: linear-gradient(160deg, var(--green-dark) 0%, #1d6e38 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #why::before {
+      content: '🌿';
+      position: absolute;
+      font-size: 400px;
+      right: -80px; top: -80px;
+      opacity: .04;
+      pointer-events: none;
+    }
+
+    #why .section-title { color: #fff; }
+    #why .section-label { color: var(--gold); }
+    #why .section-sub { color: rgba(255,255,255,.6); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .why-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 30px 26px;
+      transition: background .3s, transform .3s;
+    }
+    .why-card:hover { background: rgba(255,255,255,.12); transform: translateY(-4px); }
+
+    .why-icon {
+      font-size: 38px;
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    .why-card h3 {
+      font-size: 18px; font-weight: 700;
+      color: #fff; margin-bottom: 10px;
+    }
+    .why-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.75;
+    }
+
+    /* ══ GALLERY ════════════════════════════════════════════ */
+    #gallery { background: #fff; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 200px);
+      gap: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .gallery-item {
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item:nth-child(1) { grid-row: span 2; font-size: 72px; background: linear-gradient(135deg,#1a5c2e,#3aaa5e); }
+    .gallery-item:nth-child(2) { background: linear-gradient(135deg,#5a3800,#c09000); }
+    .gallery-item:nth-child(3) { background: linear-gradient(135deg,#8b1a1a,#c0271a); }
+    .gallery-item:nth-child(4) { background: linear-gradient(135deg,#1a4a5c,#2a7a8a); }
+    .gallery-item:nth-child(5) { background: linear-gradient(135deg,#3a2a1a,#7a5a3a); }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex; align-items: flex-end;
+      padding: 14px;
+      transition: background .3s;
+    }
+    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,.3); }
+    .gallery-label {
+      color: rgba(255,255,255,0);
+      font-size: 13px; font-weight: 600;
+      transition: color .3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .gallery-item:hover .gallery-label { color: #fff; }
+
+    /* ══ CONTACT ════════════════════════════════════════════ */
+    #contact {
+      background: var(--cream);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-size: 28px; font-weight: 700;
+      color: var(--green-dark); margin-bottom: 14px;
+    }
+    .contact-info p {
+      font-size: 15px; color: var(--text-muted);
+      line-height: 1.8; margin-bottom: 30px;
+    }
+
+    .info-item {
+      display: flex; gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .info-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: var(--green-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .info-content label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--orange); letter-spacing: 1px; margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+    .info-content span {
+      font-size: 15px; color: var(--text-dark); font-weight: 500;
+    }
+
+    .contact-form {
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 4px 30px rgba(0,0,0,.07);
+    }
+
+    .contact-form h3 {
+      font-size: 20px; font-weight: 700;
+      color: var(--green-dark); margin-bottom: 24px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text-dark); margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e0e8e0;
+      border-radius: 10px;
+      font-family: 'Hind Siliguri', sans-serif;
+      font-size: 15px;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color .2s;
+      background: #f9fdf9;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--green-mid); background: #fff; }
+
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+      color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Hind Siliguri', sans-serif;
+      font-size: 16px; font-weight: 600;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      margin-top: 6px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,92,46,.3); }
+
+    /* ══ FOOTER ══════════════════════════════════════════════ */
+    #footer {
+      background: var(--green-dark);
+      padding: 60px 5% 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 40px;
+      max-width: 1100px;
+      margin: 0 auto 40px;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.8;
+      margin-top: 14px;
+      max-width: 300px;
+    }
+
+    .footer-logo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .footer-logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; color: #fff;
+    }
+    .footer-logo-text { color: #fff; font-size: 18px; font-weight: 700; line-height: 1.2; }
+    .footer-logo-text small { display: block; font-size: 11px; color: rgba(255,255,255,.5); font-weight: 400; }
+
+    .footer-col h4 {
+      font-size: 14px; font-weight: 700;
+      color: #fff; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(255,255,255,.1);
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a {
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color .2s;
+    }
+    .footer-col ul li a:hover { color: var(--orange); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-bottom p {
+      font-size: 13px;
+      color: rgba(255,255,255,.4);
+    }
+
+    .footer-bottom span {
+      color: var(--orange);
+    }
+
+    .social-links {
+      display: flex; gap: 10px;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .social-link:hover { background: var(--orange); }
+
+    /* ══ ANIMATIONS ══════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ══ RESPONSIVE ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .about-grid,
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-item:nth-child(1) { grid-row: span 1; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+
+      .hero-stats { gap: 24px; }
+
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ════════════════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <div class="nav-logo-icon">🌿</div>
+    <div class="nav-logo-text">
+      <span>এভার ফ্রেশ ফার্ম</span>
+      <span>EVER FRESH FARM</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#hero">হোম</a></li>
+    <li><a href="#about">আমাদের সম্পর্কে</a></li>
+    <li><a href="#products">পণ্যসমূহ</a></li>
+    <li><a href="#why">কেন আমরা?</a></li>
+    <li><a href="#gallery">গ্যালারি</a></li>
+    <li><a href="#contact" class="nav-cta">যোগাযোগ করুন</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-leaf">🌿</div>
+  <div class="hero-leaf2">🍃</div>
+
+  <div class="hero-content">
+    <div class="hero-badge">🌱 প্রাণীজ আমিষ উৎপাদন ও সরবরাহকারী</div>
+
+    <h1 class="hero-title">
+      <span class="highlight">এভার ফ্রেশ ফার্ম</span><br/>
+      থেকে সরাসরি<br/>তাজা ও হালাল
+    </h1>
+
+    <p class="hero-tagline">Inshaf Brings Happiness 🌿</p>
+
+    <p class="hero-desc">
+      ফেনীর ছনুয়া থেকে সরাসরি পালিত সুস্থ ছাগল ও তাজা মাংস।
+      আমরা নিশ্চিত করি সর্বোচ্চ মান, সম্পূর্ণ হালাল এবং সাশ্রয়ী মূল্য।
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#products" class="btn-primary">🐐 পণ্য দেখুন</a>
+      <a href="#contact" class="btn-outline">📞 অর্ডার করুন</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">১০০<span>%</span></div>
+        <div class="stat-label">হালাল গ্যারান্টি</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">২৪<span>/৭</span></div>
+        <div class="stat-label">সার্ভিস সময়</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">৫০<span>+</span></div>
+        <div class="stat-label">সন্তুষ্ট গ্রাহক</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ ABOUT ══════════════════════════════════════════════ -->
+<section id="about">
+  <div class="about-grid fade-up">
+    <div class="about-image-wrap">
+      <div class="about-img-placeholder">
+        <div class="big-icon">🐐</div>
+        <p>ফার্মের ছবি এখানে থাকবে</p>
+      </div>
+      <div class="about-badge-float">
+        <div class="num">১০০%</div>
+        <div class="lbl">অর্গানিক</div>
+      </div>
+    </div>
+
+    <div class="about-text">
+      <div class="section-label">আমাদের সম্পর্কে</div>
+      <h2>বিশ্বস্ততার সাথে<br/>প্রাকৃতিক খাদ্য সরবরাহ</h2>
+      <p>
+        Ever Fresh Farm ফেনীর ছনুয়ায় অবস্থিত একটি বিশ্বস্ত প্রাণীজ আমিষ উৎপাদন ও সরবরাহকারী প্রতিষ্ঠান।
+        আমরা বিশ্বাস করি — সুস্থ পশু থেকেই আসে সুস্থ খাবার।
+      </p>
+      <p>
+        আমাদের ছাগলগুলো প্রাকৃতিক পরিবেশে লালন-পালন করা হয়, কোনো কৃত্রিম হরমোন ব্যবহার ছাড়াই।
+        প্রতিটি পশু নিয়মিত স্বাস্থ্য পরীক্ষার আওতায় থাকে।
+      </p>
+
+      <div class="about-features">
+        <div class="feature-row">
+          <div class="feature-icon">✅</div>
+          <span>প্রাকৃতিক পরিবেশে পালিত ছাগল</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">🕌</div>
+          <span>সম্পূর্ণ হালাল প্রক্রিয়ায় জবাই</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">🚚</div>
+          <span>দ্রুত ও নিরাপদ ডেলিভারি সুবিধা</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">💰</div>
+          <span>সাশ্রয়ী ও ন্যায্য মূল্য নিশ্চিত</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ PRODUCTS ═══════════════════════════════════════════ -->
+<section id="products">
+  <div class="section-header fade-up">
+    <div class="section-label">আমাদের পণ্য</div>
+    <h2 class="section-title">তাজা ও হালাল পণ্যসমূহ</h2>
+    <p class="section-sub">সরাসরি ফার্ম থেকে আপনার দরজায় — সর্বোচ্চ মান নিশ্চিত করে</p>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card fade-up">
+      <div class="product-img goat">
+        🐐
+        <div class="product-tag">সেরা বিক্রিত</div>
+      </div>
+      <div class="product-body">
+        <h3>জীবন্ত ছাগল বিক্রয়</h3>
+        <p>সুস্থ, সুন্দর ও ভালোভাবে পালিত দেশি ছাগল। কোরবানি ও পারিবারিক ব্যবহারের জন্য আদর্শ।</p>
+        <div class="product-tags">
+          <span class="ptag">দেশি জাত</span>
+          <span class="ptag">সুস্থ-সবল</span>
+          <span class="ptag">হালাল</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card fade-up">
+      <div class="product-img meat">
+        🥩
+        <div class="product-tag">তাজা</div>
+      </div>
+      <div class="product-body">
+        <h3>ছাগলের তাজা মাংস</h3>
+        <p>সম্পূর্ণ হালাল প্রক্রিয়ায় জবাই করা তাজা মাংস। পরিষ্কার, স্বাস্থ্যসম্মত ও সুস্বাদু।</p>
+        <div class="product-tags">
+          <span class="ptag">১০০% হালাল</span>
+          <span class="ptag">তাজা</span>
+          <span class="ptag">পরিষ্কার</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card fade-up">
+      <div class="product-img live">
+        🎉
+        <div class="product-tag">বিশেষ অর্ডার</div>
+      </div>
+      <div class="product-body">
+        <h3>কোরবানির ছাগল</h3>
+        <p>ঈদুল আযহায় কোরবানির জন্য বিশেষভাবে প্রস্তুত বড় ও সুন্দর ছাগল। আগাম বুকিং করুন।</p>
+        <div class="product-tags">
+          <span class="ptag">আগাম বুকিং</span>
+          <span class="ptag">কোরবানি উপযোগী</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ WHY US ══════════════════════════════════════════════ -->
+<section id="why">
+  <div class="section-header fade-up">
+    <div class="section-label">কেন আমরা?</div>
+    <h2 class="section-title">আমাদের বেছে নেওয়ার কারণ</h2>
+    <p class="section-sub">গ্রাহকের বিশ্বাসই আমাদের সবচেয়ে বড় পুরস্কার</p>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-card fade-up">
+      <span class="why-icon">🌿</span>
+      <h3>প্রাকৃতিক লালন-পালন</h3>
+      <p>কোনো ক্ষতিকর কেমিক্যাল বা কৃত্রিম হরমোন ছাড়াই প্রাকৃতিক পরিবেশে পশু পালন করা হয়।</p>
+    </div>
+    <div class="why-card fade-up">
+      <span class="why-icon">🕌</span>
+      <h3>সম্পূর্ণ হালাল</h3>
+      <p>ইসলামিক নিয়ম মেনে সম্পূর্ণ হালাল প্রক্রিয়ায় পশু জবাই ও মাংস সরবরাহ করা হয়।</p>
+    </div>
+    <div class="why-card fade-up">
+      <span class="why-icon">💰</span>
+      <h3>ন্যায্য মূল্য</h3>
+      <p>বাজার মূল্যের তুলনায় সাশ্রয়ী ও সম্পূর্ণ ন্যায্য মূল্যে মানসম্পন্ন পণ্য সরবরাহ।</p>
+    </div>
+    <div class="why-card fade-up">
+      <span class="why-icon">🚚</span>
+      <h3>দ্রুত ডেলিভারি</h3>
+      <p>অর্ডার করলে দ্রুততম সময়ের মধ্যে আপনার পছন্দের স্থানে পৌঁছে দেওয়া হয়।</p>
+    </div>
+    <div class="why-card fade-up">
+      <span class="why-icon">🤝</span>
+      <h3>বিশ্বস্ততা</h3>
+      <p>প্রতিটি লেনদেনে সততা ও স্বচ্ছতা — আমাদের দীর্ঘদিনের গ্রাহকরাই আমাদের পরিচয়।</p>
+    </div>
+    <div class="why-card fade-up">
+      <span class="why-icon">📞</span>
+      <h3>সার্বক্ষণিক সেবা</h3>
+      <p>যেকোনো প্রশ্ন বা অর্ডারের জন্য আমরা সবসময় আপনার পাশে আছি।</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ GALLERY ═════════════════════════════════════════════ -->
+<section id="gallery">
+  <div class="section-header fade-up">
+    <div class="section-label">গ্যালারি</div>
+    <h2 class="section-title">ফার্মের দৃশ্য</h2>
+    <p class="section-sub">আমাদের ফার্ম ও পণ্যের একটি ঝলক</p>
+  </div>
+
+  <div class="gallery-grid fade-up">
+    <div class="gallery-item">🐐<div class="gallery-overlay"><span class="gallery-label">ছাগলের পাল</span></div></div>
+    <div class="gallery-item">🌾<div class="gallery-overlay"><span class="gallery-label">প্রাকৃতিক পরিবেশ</span></div></div>
+    <div class="gallery-item">🥩<div class="gallery-overlay"><span class="gallery-label">তাজা মাংস</span></div></div>
+    <div class="gallery-item">🌿<div class="gallery-overlay"><span class="gallery-label">সবুজ ফার্ম</span></div></div>
+    <div class="gallery-item">🏡<div class="gallery-overlay"><span class="gallery-label">ফার্মহাউস</span></div></div>
+  </div>
+</section>
+
+
+<!-- ═══ CONTACT ════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="section-header fade-up">
+    <div class="section-label">যোগাযোগ</div>
+    <h2 class="section-title">আজই অর্ডার করুন</h2>
+    <p class="section-sub">আমাদের সাথে যোগাযোগ করুন, আমরা সর্বদা প্রস্তুত</p>
+  </div>
+
+  <div class="contact-grid fade-up">
+    <div class="contact-info">
+      <h2>সরাসরি যোগাযোগ করুন</h2>
+      <p>অর্ডার বা যেকোনো তথ্যের জন্য নিচের মাধ্যমে আমাদের সাথে যোগাযোগ করুন।</p>
+
+      <div class="info-item">
+        <div class="info-icon">📞</div>
+        <div class="info-content">
+          <label>ফোন নম্বর</label>
+          <span>01718-867657, 01829-544486</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">📧</div>
+        <div class="info-content">
+          <label>ইমেইল</label>
+          <span>everfreshfarmbd@gmail.com</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div class="info-content">
+          <label>ঠিকানা</label>
+          <span>পূর্ব ছিলোনিয়া, ঢাকা-চট্টগ্রাম মহাসড়ক পার্শে (লেমুয়া ব্রীজ সংলগ্ন), ছনুয়া, ফেনী</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div class="info-content">
+          <label>সেবার সময়</label>
+          <span>সকাল ৮টা – রাত ৯টা (প্রতিদিন)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3>✉️ মেসেজ পাঠান</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>আপনার নাম</label>
+          <input type="text" placeholder="নাম লিখুন"/>
+        </div>
+        <div class="form-group">
+          <label>ফোন নম্বর</label>
+          <input type="tel" placeholder="01XXXXXXXXX"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>পণ্যের ধরন</label>
+        <select>
+          <option>ছাগল ক্রয়</option>
+          <option>মাংস ক্রয়</option>
+          <option>কোরবানির ছাগল বুকিং</option>
+          <option>অন্যান্য</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>বার্তা</label>
+        <textarea placeholder="আপনার প্রয়োজনীয়তা জানান..."></textarea>
+      </div>
+
+      <button class="submit-btn">📨 মেসেজ পাঠান</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ FOOTER ════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">🌿</div>
+        <div class="footer-logo-text">
+          এভার ফ্রেশ ফার্ম
+          <small>Ever Fresh Farm</small>
+        </div>
+      </div>
+      <p>
+        বিসমিল্লাহির রাহমানির রাহিম।<br/>
+        প্রাণীজ আমিষ উৎপাদন ও সরবরাহে বিশ্বস্ততার নাম — এভার ফ্রেশ ফার্ম।
+        Inshaf Brings Happiness 🌿
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h4>দ্রুত লিংক</h4>
+      <ul>
+        <li><a href="#hero">🏠 হোম</a></li>
+        <li><a href="#about">ℹ️ আমাদের সম্পর্কে</a></li>
+        <li><a href="#products">🐐 পণ্যসমূহ</a></li>
+        <li><a href="#gallery">🖼️ গ্যালারি</a></li>
+        <li><a href="#contact">📞 যোগাযোগ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>যোগাযোগ</h4>
+      <ul>
+        <li><a href="tel:01718867657">📞 01718-867657</a></li>
+        <li><a href="tel:01829544486">📞 01829-544486</a></li>
+        <li><a href="mailto:everfreshfarmbd@gmail.com">📧 Gmail</a></li>
+        <li><a href="#">📍 ফেনী, বাংলাদেশ</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© ২০২৫ এভার ফ্রেশ ফার্ম। সর্বস্বত্ব সংরক্ষিত। <span>Inshaf Brings Happiness 🌿</span></p>
+    <div class="social-links">
+      <a class="social-link" href="#">📘</a>
+      <a class="social-link" href="#">💬</a>
+      <a class="social-link" href="#">📸</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  // Scroll animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Navbar scroll shrink
+  window.addEventListener('scroll', () => {
+    const nb = document.getElementById('navbar');
+    if (window.scrollY > 60) {
+      nb.style.height = '58px';
+      nb.style.boxShadow = '0 6px 30px rgba(0,0,0,.35)';
+    } else {
+      nb.style.height = '70px';
+      nb.style.boxShadow = '0 4px 30px rgba(0,0,0,.25)';
+    }
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = 'none';
+    } else {
+      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:#1a5c2e;padding:20px;gap:4px;z-index:999;';
+    }
+  }
+</script>
+
+</body>
+</html>

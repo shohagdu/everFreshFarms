@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-green-dark:  #0f4423;
+  --color-green-mid:   #1e7a34;
+  --color-green-light: #3daf60;
+  --color-orange:      #f07318;
+  --color-red:         #d42016;
+  --color-cream:       #fdf9f4;
+  --color-gold:        #d4a017;
+  --color-text-dark:   #1a2e1a;
+  --color-text-muted:  #4a6a4a;
+
+  --font-hind:      'Hind Siliguri', sans-serif;
+  --font-playfair:  'Playfair Display', serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-hind);
+  background-color: var(--color-cream);
+  color: var(--color-text-dark);
+  overflow-x: hidden;
+}
+
+#root { min-height: 100vh; }
+
+/* Scroll-triggered fade-up animation */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1);
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Gradient text — matches logo "এভার" red→orange */
+.gradient-text {
+  background: linear-gradient(100deg, #d42016 0%, #f07318 60%, #f5a623 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Green gradient text — matches logo "ফ্রেশ" */
+.gradient-text-green {
+  background: linear-gradient(135deg, #1e7a34 0%, #3daf60 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section label */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 16px;
+  padding: 5px 14px;
+  background: rgba(240,115,24,.1);
+  border: 1px solid rgba(240,115,24,.25);
+  border-radius: 20px;
+}
+
+/* Nav link underline animation */
+.nav-link {
+  position: relative;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 6px;
+  transition: color 0.25s;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%; right: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, #d42016, #f07318);
+  border-radius: 2px;
+  transition: left 0.3s, right 0.3s;
+}
+.nav-link:hover { color: #fff; }
+.nav-link:hover::after { left: 14px; right: 14px; }
+
+/* Product card hover */
+.product-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s;
+  border: 1px solid rgba(30,122,52,.08);
+}
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(30,122,52,.15);
+}
+
+/* Why card hover */
+.why-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 32px 28px;
+  transition: background 0.3s, transform 0.3s, border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.why-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #d42016, #f07318, #3daf60);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.why-card:hover {
+  background: rgba(255,255,255,0.11);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-5px);
+}
+.why-card:hover::before { opacity: 1; }
+
+/* Gallery item hover */
+.gallery-item {
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+  position: relative;
+}
+.gallery-item:hover { transform: scale(1.03); }
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+  transition: background 0.3s;
+}
+.gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.35); }
+.gallery-label {
+  color: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+.gallery-item:hover .gallery-label { color: #fff; }
+
+/* Form inputs */
+.form-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #ddeedd;
+  border-radius: 10px;
+  font-family: var(--font-hind);
+  font-size: 15px;
+  color: var(--color-text-dark);
+  background: #f7fdf8;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  border-color: var(--color-green-mid);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(30,122,52,.1);
+}
+
+/* Btn primary — logo orange */
+.btn-primary {
+  display: inline-block;
+  background: linear-gradient(135deg, #f07318 0%, #d42016 100%);
+  color: #fff;
+  padding: 14px 34px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-hind);
+  box-shadow: 0 6px 22px rgba(212,32,22,.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: .3px;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(212,32,22,.45);
+}
+
+/* Btn outline */
+.btn-outline {
+  display: inline-block;
+  background: transparent;
+  color: #fff;
+  padding: 14px 34px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid rgba(255,255,255,0.4);
+  font-family: var(--font-hind);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  letter-spacing: .3px;
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.7);
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+  .show-mobile   { display: flex !important; }
+
+  #gallery .gallery-grid-inner {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+  }
+
+  #footer > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hidden-mobile { display: flex !important; }
+  .show-mobile   { display: none !important; }
+}
