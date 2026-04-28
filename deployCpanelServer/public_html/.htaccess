@@ -1,0 +1,30 @@
+# Serve index.html (React) before index.php (Laravel)
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+    RewriteBase /
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Serve existing files and folders directly
+    RewriteCond %{REQUEST_FILENAME} -d [OR]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # API, admin, livewire → Laravel (index.php)
+    RewriteRule ^(api|admin|livewire)(/.*)?$ index.php [L]
+
+    # All other unknown routes → React (index.html)
+    RewriteRule ^ index.html [L]
+</IfModule>

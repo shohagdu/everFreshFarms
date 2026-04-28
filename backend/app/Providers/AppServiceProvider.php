@@ -15,12 +15,14 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/everfresh_farm/livewire/update', $handle);
-        });
-
-        Livewire::setScriptRoute(function ($handle) {
-            return Route::get('/everfresh_farm/livewire/livewire.js', $handle);
-        });
+//        $prefix = env('LIVEWIRE_ROUTE_PREFIX', '');
+//
+//        Livewire::setUpdateRoute(function ($handle) use ($prefix) {
+//            return Route::post($prefix . '/livewire/update', $handle);
+//        });
+//
+//        Livewire::setScriptRoute(function ($handle) use ($prefix) {
+//            return Route::get($prefix . '/livewire/livewire.js', $handle);
+//        });
     }
 }

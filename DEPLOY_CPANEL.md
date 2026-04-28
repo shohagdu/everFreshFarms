@@ -1,3 +1,4 @@
+
 # cPanel Shared Hosting Deployment Guide
 ## Ever Fresh Farm — React (Vite) + Laravel
 

@@ -4,6 +4,7 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie', 'storage/*'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [
+        'https://everfreshfarmsbd.com',
         'http://localhost:5173',
         'http://localhost:3000',
         'http://localhost:8000',

@@ -183,5 +183,5 @@ return [
     */
 
     'release_token' => 'a',
-	'update_uri' => '/everfresh_farm/livewire/update',
+	'update_uri' => env('LIVEWIRE_UPDATE_URI', '/livewire/update'),
 ];

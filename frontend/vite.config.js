@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
   const isLive = env.VITE_IS_LIVE_DEPLOY === 'YES'
-  const base = isLive ? '/everfresh_farm/' : '/'
-  const apiBase = isLive ? '/everfresh_farm/api' : '/api'
+  const base = '/'
+  const apiBase = '/api'
   return {
     base,
     define: {
