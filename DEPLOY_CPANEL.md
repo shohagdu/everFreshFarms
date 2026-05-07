@@ -1,17 +1,13 @@
-
-# cPanel Shared Hosting Deployment Guide
-## Ever Fresh Farm — React (Vite) + Laravel
+# cPanel Deployment Guide
+## Ever Fresh Farm — React (Vite) + Laravel + Filament
 
 ---
 
-## Overview
+## Server Folder Structure
 
-The site will live at: `https://yourdomain.com/everfresh_farm`
-
-**Server folder structure on cPanel:**
 ```
-/home/cpanelusername/
-├── everfresh_laravel/          ← Laravel app (private, NOT inside public_html)
+/home/USERNAME/
+├── everfresh_laravel/          ← Laravel app (PRIVATE — outside public_html)
 │   ├── app/
 │   ├── bootstrap/
 │   ├── config/
@@ -20,14 +16,27 @@ The site will live at: `https://yourdomain.com/everfresh_farm`
 │   ├── routes/
 │   ├── storage/
 │   ├── vendor/
-│   └── ...
-└── public_html/
-    └── everfresh_farm/         ← Web-accessible folder (Laravel public + React build)
-        ├── index.php           (modified)
-        ├── .htaccess
-        ├── storage → symlink
-        └── assets/             (React build output)
+│   ├── artisan
+│   ├── composer.json
+│   └── .env
+│
+└── public_html/                ← Web root (accessible via https://yourdomain.com)
+    ├── index.php               ← Laravel entry point (points to ../everfresh_laravel)
+    ├── .htaccess               ← Custom rules for React + Laravel + Filament
+    ├── index.html              ← React frontend (SPA)
+    ├── assets/                 ← React JS/CSS build output
+    ├── vendor/
+    │   └── livewire/           ← Published Livewire JS assets
+    │       ├── livewire.min.js
+    │       └── manifest.json
+    ├── storage/                ← Symlink → everfresh_laravel/storage/app/public
+    ├── favicon.svg
+    ├── logo.png
+    ├── logo.jpeg
+    └── farm.jpeg
 ```
+
+> Replace `USERNAME` with your actual cPanel account username throughout this guide.
 
 ---
 
@@ -35,330 +44,268 @@ The site will live at: `https://yourdomain.com/everfresh_farm`
 
 On your **local machine**:
 
-### 1a. Update `frontend/vite.config.js`
-Change the base URL to match the subfolder:
-
-```js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-  base: '/everfresh_farm/',   // ← ADD THIS LINE
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
-})
-```
-
-### 1b. Update `frontend/src/services/api.js`
-Change the baseURL to an absolute path:
-
-```js
-const api = axios.create({
-  baseURL: '/everfresh_farm/api',   // ← update this
-  headers: { 'Accept': 'application/json' },
-});
-```
-
-### 1c. Run the build
-
 ```bash
 cd frontend
 npm install
 npm run build
 ```
 
-This creates `frontend/dist/` folder with all static files.
+This creates `frontend/dist/` with all static files.
 
----
-
-## STEP 2 — Prepare Laravel for Production
-
-On your **local machine**:
-
-### 2a. Install dependencies (production only)
-
-```bash
-cd backend
-composer install --optimize-autoloader --no-dev
-```
-
-### 2b. Copy React build into Laravel public folder
-
-Copy everything from `frontend/dist/` into `backend/public/`:
+Then copy the build output into `backend/public/`:
 
 ```bash
 cp -r frontend/dist/* backend/public/
 ```
 
-Your `backend/public/` should now contain:
-```
-backend/public/
-├── index.php          (Laravel's — keep this)
-├── .htaccess          (Laravel's — keep this)
-├── index.html         (React's — from dist)
-├── assets/            (React JS/CSS files)
-├── logo.png
-├── logo.jpeg
-└── farm.jpeg
-```
-
-### 2c. Update Laravel `public/index.php` paths
-
-Since Laravel files will be in `everfresh_laravel/` (outside public_html), update path references.
-
-Open `backend/public/index.php` and change:
-
-```php
-// FROM:
-require __DIR__.'/../vendor/autoload.php';
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-// TO:
-require __DIR__.'/../../everfresh_laravel/vendor/autoload.php';
-$app = require_once __DIR__.'/../../everfresh_laravel/bootstrap/app.php';
-```
-
 ---
 
-## STEP 3 — Create `.env` for Production
+## STEP 2 — Prepare the `.env` File
 
-Create a new `.env` file for production (copy from backend/.env and edit):
+Create `backend/.env` for production:
 
 ```env
 APP_NAME="Ever Fresh Farm"
 APP_ENV=production
-APP_KEY=         ← generate below
+APP_KEY=base64:GENERATE_THIS_BELOW
 APP_DEBUG=false
 APP_URL=https://yourdomain.com
 
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=cpanelusername_everfresh
-DB_USERNAME=cpanelusername_dbuser
+DB_DATABASE=USERNAME_dbname
+DB_USERNAME=USERNAME_dbuser
 DB_PASSWORD=your_db_password
 
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
 FILESYSTEM_DISK=public
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+
+MAIL_MAILER=smtp
+MAIL_HOST=mail.yourdomain.com
+MAIL_PORT=465
+MAIL_USERNAME=info@yourdomain.com
+MAIL_PASSWORD=your_mail_password
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="info@yourdomain.com"
+MAIL_FROM_NAME="Ever Fresh Farm"
+
+LIVEWIRE_UPDATE_URI=/livewire/update
 ```
 
-Generate APP_KEY locally:
+Generate the APP_KEY:
 ```bash
 cd backend
 php artisan key:generate --show
 ```
-Copy the output (base64:...) and paste into APP_KEY= above.
+Paste the output into `APP_KEY=` above.
 
 ---
 
-## STEP 4 — Upload Files to cPanel
+## STEP 3 — Upload Files to cPanel
 
-### 4a. Upload Laravel app (private folder)
+### 3a. Upload the Laravel app (private — outside public_html)
 
-Upload the entire `backend/` folder contents to:
+Upload all contents of `backend/` **except** the `public/` folder to:
 ```
-/home/cpanelusername/everfresh_laravel/
+/home/USERNAME/everfresh_laravel/
 ```
 
-**Do NOT upload** these folders (they are local only):
+**Skip these** (local-only):
 - `node_modules/`
 - `.git/`
+- `public/` ← goes to public_html instead (see 3b)
 
-**Files to upload:**
-- `app/`
-- `bootstrap/`
-- `config/`
-- `database/`
-- `resources/`
-- `routes/`
-- `storage/`
-- `vendor/`
-- `artisan`
-- `composer.json`
-- `.env`  ← use the production one from Step 3
-
-### 4b. Upload public files
-
-Upload contents of `backend/public/` to:
+**Required files/folders:**
 ```
-/home/cpanelusername/public_html/everfresh_farm/
+app/
+bootstrap/
+config/
+database/
+resources/
+routes/
+storage/
+vendor/
+artisan
+composer.json
+composer.lock
+.env          ← the production one from Step 2
 ```
 
-Upload these files:
-- `index.php`  ← the modified one from Step 2c
-- `.htaccess`
-- `index.html`
-- `assets/`
-- `logo.png`, `logo.jpeg`, `farm.jpeg`
+### 3b. Upload public files (web root)
+
+Upload all contents of `backend/public/` to:
+```
+/home/USERNAME/public_html/
+```
+
+This includes:
+```
+index.php           ← Laravel entry (uses ../everfresh_laravel path)
+.htaccess           ← cPanel-specific rules
+index.html          ← React SPA
+assets/             ← React build output
+vendor/livewire/    ← Livewire JS assets
+favicon.svg
+logo.png
+logo.jpeg
+farm.jpeg
+robots.txt
+```
 
 ---
 
-## STEP 5 — Set Up Database in cPanel
+## STEP 4 — Set Up the Database
 
 1. Go to cPanel → **MySQL Databases**
-2. Create database: `everfresh` → full name becomes `cpanelusername_everfresh`
-3. Create user: `dbuser` → full name becomes `cpanelusername_dbuser`
+2. Create a database — e.g. `everfresh` → becomes `USERNAME_everfresh`
+3. Create a user — e.g. `dbuser` → becomes `USERNAME_dbuser`
 4. Add user to database with **All Privileges**
-5. Update `.env` on server with these exact names
+5. Update the `.env` on the server with these exact names
 
 ---
 
-## STEP 6 — Run Laravel Setup via cPanel Terminal
+## STEP 5 — Run Laravel Setup (cPanel Terminal)
 
-Go to cPanel → **Terminal** (or SSH if available):
+Go to **cPanel → Terminal**:
 
 ```bash
-cd /home/cpanelusername/everfresh_laravel
+cd /home/USERNAME/everfresh_laravel
 
-# Run database migrations
+# Run database migrations (creates all tables including sessions)
 php artisan migrate --force
 
-# Create storage symlink (important!)
-php artisan storage:link
-
-# The symlink will be created at:
-# public_html/everfresh_farm/storage → everfresh_laravel/storage/app/public
-# BUT since public is in a different location, do it manually (see Step 7)
-
-# Clear all caches
+# Clear and rebuild caches
 php artisan config:clear
-php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
+php artisan cache:clear
 php artisan optimize
 ```
 
 ---
 
-## STEP 7 — Create Storage Symlink Manually
+## STEP 6 — Create the Storage Symlink
 
-The `php artisan storage:link` command creates the symlink inside Laravel's `public/` folder, but our web-accessible folder is `public_html/everfresh_farm/`. So create the symlink manually:
+`php artisan storage:link` won't work here because `public/` is in a different location. Create it manually:
 
-In cPanel Terminal:
 ```bash
-ln -s /home/cpanelusername/everfresh_laravel/storage/app/public \
-      /home/cpanelusername/public_html/everfresh_farm/storage
+ln -s /home/USERNAME/everfresh_laravel/storage/app/public \
+      /home/USERNAME/public_html/storage
 ```
 
-Verify it works:
+Verify:
 ```bash
-ls -la /home/cpanelusername/public_html/everfresh_farm/storage
+ls -la /home/USERNAME/public_html/storage
+# Should show: storage -> /home/USERNAME/everfresh_laravel/storage/app/public
 ```
 
 ---
 
-## STEP 8 — Set Folder Permissions
+## STEP 7 — Set Folder Permissions
 
-In cPanel Terminal:
 ```bash
-cd /home/cpanelusername/everfresh_laravel
+cd /home/USERNAME/everfresh_laravel
 
-# Storage and cache must be writable
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
-
-# Make sure web server can write
-chown -R cpanelusername:nobody storage
-chown -R cpanelusername:nobody bootstrap/cache
 ```
 
 ---
 
-## STEP 9 — Update `.htaccess` in `public_html/everfresh_farm/`
-
-Replace the `.htaccess` in `public_html/everfresh_farm/` with:
-
-```apache
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /everfresh_farm/
-
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # Serve existing files/folders directly
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-
-    # API and admin requests → Laravel (index.php)
-    RewriteRule ^ index.php [L]
-</IfModule>
-```
-
----
-
-## STEP 10 — Update CORS for Production
-
-On the server, edit `everfresh_laravel/config/cors.php`:
-
-```php
-'paths' => ['api/*', 'sanctum/csrf-cookie', 'storage/*'],
-'allowed_origins' => ['https://yourdomain.com'],
-'allowed_methods' => ['*'],
-'allowed_headers' => ['*'],
-```
-
----
-
-## STEP 11 — Verify Everything
-
-Open browser and test:
+## STEP 8 — Verify Everything
 
 | URL | Expected Result |
 |-----|----------------|
-| `https://yourdomain.com/everfresh_farm/` | React frontend loads |
-| `https://yourdomain.com/everfresh_farm/api/site-settings` | JSON response |
-| `https://yourdomain.com/everfresh_farm/admin` | Filament admin panel |
-| `https://yourdomain.com/everfresh_farm/storage/gallery/images/xxx.jpg` | Image loads |
+| `https://yourdomain.com/` | React frontend loads |
+| `https://yourdomain.com/api/site-settings` | JSON response |
+| `https://yourdomain.com/admin/login` | Filament login page loads |
+| `https://yourdomain.com/admin` | Redirects to login or dashboard |
+| `https://yourdomain.com/vendor/livewire/livewire.min.js` | Returns JavaScript (not HTML) |
+
+---
+
+## Key Files Explained
+
+### `backend/public/index.php`
+Points to the Laravel app using a relative path:
+```php
+$laravelPath = __DIR__ . '/../everfresh_laravel';
+```
+When deployed at `public_html/index.php`, this correctly resolves to `/home/USERNAME/everfresh_laravel`.
+
+### `backend/public/.htaccess`
+Handles three types of requests:
+- **Existing files/folders** → served directly (images, CSS, JS, vendor assets)
+- **`api/`, `admin/`, `livewire/`, `filament/`** → routed to `index.php` (Laravel)
+- **Everything else** → serves `index.html` (React SPA)
+
+### `backend/public/vendor/livewire/manifest.json`
+Tells Livewire where to find its published JavaScript:
+```json
+{"/livewire.js":"livewire.min.js"}
+```
+The browser loads `/vendor/livewire/livewire.min.js` which is a real static file in `public_html/vendor/livewire/`. Without this file being accessible, the Filament admin login form falls back to a native HTML POST and returns **405 Method Not Allowed**.
 
 ---
 
 ## Troubleshooting
 
-### Blank page / 500 error
+### 500 Server Error
 ```bash
-# Check Laravel logs
-cat /home/cpanelusername/everfresh_laravel/storage/logs/laravel.log | tail -50
+# Check Laravel error log
+tail -50 /home/USERNAME/everfresh_laravel/storage/logs/laravel.log
+```
+
+### 405 Method Not Allowed on admin login
+The Livewire JS is not loading. Check:
+```bash
+# Test in browser — must return JavaScript, NOT HTML
+curl https://yourdomain.com/vendor/livewire/livewire.min.js | head -5
+```
+If it returns HTML, the `vendor/livewire/` folder is missing from `public_html/`.
+
+### 419 Page Expired (CSRF error)
+The sessions table is missing. Run:
+```bash
+cd /home/USERNAME/everfresh_laravel
+php artisan migrate --force
 ```
 
 ### Images not loading
 ```bash
-# Check symlink exists
-ls -la /home/cpanelusername/public_html/everfresh_farm/storage
+# Check symlink
+ls -la /home/USERNAME/public_html/storage
 
-# Check storage permissions
-chmod -R 775 /home/cpanelusername/everfresh_laravel/storage
+# Fix permissions
+chmod -R 775 /home/USERNAME/everfresh_laravel/storage
 ```
 
 ### API returning 404
-- Check `.htaccess` has `RewriteBase /everfresh_farm/`
+- Confirm `.htaccess` routes `api/*` to `index.php`
 - Check `mod_rewrite` is enabled (contact host if needed)
 
-### Database connection error
-- Double-check DB credentials in `.env`
-- Use `localhost` not `127.0.0.1` for DB_HOST on shared hosting
-
-### React routes 404 on refresh
-- The `.htaccess` `RewriteRule ^ index.php [L]` handles this — make sure it's correct
+### React routes 404 on page refresh
+The `.htaccess` catch-all `RewriteRule ^ index.html [L]` handles this. Make sure the `.htaccess` is the cPanel version from `backend/public/`, not the default Laravel one.
 
 ---
 
-## Quick Checklist
+## Deployment Checklist
 
-- [ ] React built with `base: '/everfresh_farm/'` in vite.config.js
-- [ ] `api.js` baseURL updated to `/everfresh_farm/api`
-- [ ] React dist copied into `backend/public/`
-- [ ] `index.php` paths updated to point to `everfresh_laravel/`
+- [ ] React built and copied into `backend/public/`
 - [ ] Production `.env` created with correct DB credentials and APP_KEY
-- [ ] `everfresh_laravel/` uploaded to home directory (outside public_html)
-- [ ] `public/` contents uploaded to `public_html/everfresh_farm/`
-- [ ] Database created in cPanel MySQL
+- [ ] `backend/` contents (excluding `public/`) uploaded to `everfresh_laravel/`
+- [ ] `backend/public/` contents uploaded to `public_html/`
+- [ ] Database and user created in cPanel MySQL
 - [ ] `php artisan migrate --force` run
-- [ ] Storage symlink created manually
-- [ ] Folder permissions set (775 for storage)
-- [ ] `.htaccess` updated with `RewriteBase /everfresh_farm/`
-- [ ] CORS updated with production domain
-- [ ] All caches cleared
+- [ ] Storage symlink created: `public_html/storage → everfresh_laravel/storage/app/public`
+- [ ] Folder permissions set (775 on storage and bootstrap/cache)
+- [ ] All caches cleared (`config:clear`, `route:clear`, `view:clear`, `cache:clear`)
+- [ ] `https://yourdomain.com/vendor/livewire/livewire.min.js` returns JavaScript
+- [ ] `https://yourdomain.com/admin/login` loads and login works

@@ -7,7 +7,7 @@ define('LARAVEL_START', microtime(true));
 
 // cPanel: Laravel app lives at /home/USERNAME/everfresh_laravel/ (outside public_html)
 // cPanel: This file lives at /home/USERNAME/public_html/index.php
-$laravelPath = __DIR__ . '/../../everfresh_laravel';
+$laravelPath = __DIR__ . '/../everfresh_laravel';
 
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = $laravelPath . '/storage/framework/maintenance.php')) {

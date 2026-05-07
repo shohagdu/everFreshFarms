@@ -22,8 +22,8 @@ DirectoryIndex index.html index.php
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # API, admin, livewire → Laravel (index.php)
-    RewriteRule ^(api|admin|livewire)(/.*)?$ index.php [L]
+    # API, admin, livewire, filament → Laravel (index.php)
+    RewriteRule ^(api|admin|livewire|filament)(/.*)?$ index.php [L]
 
     # All other unknown routes → React (index.html)
     RewriteRule ^ index.html [L]

@@ -1,9 +1,13 @@
+# Serve index.html (React) before index.php (Laravel)
+DirectoryIndex index.html index.php
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -13,13 +17,14 @@
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    # Serve existing files and folders directly
+    RewriteCond %{REQUEST_FILENAME} -d [OR]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
 
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    # API, admin, livewire, filament → Laravel (index.php)
+    RewriteRule ^(api|admin|livewire|filament)(/.*)?$ index.php [L]
+
+    # All other unknown routes → React (index.html)
+    RewriteRule ^ index.html [L]
 </IfModule>
